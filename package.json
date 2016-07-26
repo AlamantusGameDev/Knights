@@ -1,0 +1,35 @@
+{
+  "name": "knights",
+  "version": "0.0.0",
+  "description": "A battle card game for two players that uses a standard deck of 54 playing cards.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "node server.js",
+    "browserify": "./node_modules/.bin/browserify ./src/knights.js -o ./bin/knights.js",
+    "uglifyjs": "./node_modules/.bin/uglifyjs ./bin/knights.js -c -m -o ./bin/knights.js",
+    "cleancss": "./node_modules/.bin/cleancss -o ./bin/styles.css ./src/styles.css",
+    "imagemin": "./node_modules/.bin/imagemin ./src/images/* --out-dir ./bin/images",
+    "htmlminify": "./node_modules/.bin/html-minifier --collapse-whitespace --remove-comments -o ./bin/index.html ./src/index.html",
+    "build": "./node_modules/.bin/npm-run-all browserify uglifyjs cleancss imagemin htmlminify"
+  },
+  "author": "Robbie Antenesse <gamedev@alamantus.com>",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AlamantusGameDev/Knights.git"
+  },
+  "devDependencies": {
+    "browserify": "^13.1.0",
+    "clean-css": "^3.4.19",
+    "express": "^4.14.0",
+    "html-minifier": "^3.0.1",
+    "imagemin-cli": "^3.0.0",
+    "node-minify": "^1.3.9",
+    "npm-run-all": "^2.3.0",
+    "uglify-js": "^2.7.0"
+  },
+  "dependencies": {
+    "phaser": "^2.6.1"
+  }
+}
