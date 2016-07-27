@@ -1,5 +1,6 @@
 {
   "name": "knights",
+  "title": "Knights",
   "version": "0.0.0",
   "description": "A battle card game for two players that uses a standard deck of 54 playing cards.",
   "main": "server.js",
@@ -14,6 +15,98 @@
     "build": "./node_modules/.bin/npm-run-all browserify uglifyjs cleancss imagemin htmlminify"
   },
   "author": "Robbie Antenesse <gamedev@alamantus.com>",
+  "contributors": [
+    {
+      "name": "Faithtoken",
+      "url": "http://www.faithtoken.com/",
+      "contributions": [
+        {
+          "name": "Card draw icon",
+          "original": "/src/images/svg/card-draw.svg",
+          "files": [
+            "/src/images/draw.png"
+            "/src/images/draw-disabled.png",
+          ],
+          "changes": "recolor to #000 and #aaa, remove background",
+          "license": "CC BY 3.0",
+          "source": "http://game-icons.net/faithtoken/originals/card-draw.html",
+          "retrieved": "Wed Jul 27 2016 11:21:17 GMT-0600 (Mountain Daylight Time)"
+        }
+      ]
+    },
+    {
+      "name": "Lorc",
+      "url": "http://lorcblog.blogspot.com/",
+      "contributions": [
+        {
+          "name": "Broadsword icon",
+          "original": "/src/images/svg/broadsword.svg",
+          "files": [
+            "/src/images/strength.png",
+          ],
+          "changes": "recolor to #db0, remove background",
+          "license": "CC BY 3.0",
+          "source": "http://game-icons.net/lorc/originals/broadsword.html",
+          "retrieved": "Wed Jul 27 2016 11:27:35 GMT-0600 (Mountain Daylight Time)"
+        },
+        {
+          "name": "Crowned heart icon",
+          "original": "/src/images/svg/crowned-heart.svg",
+          "files": [
+            "/src/images/belief.png",
+          ],
+          "changes": "recolor to #f00, remove background",
+          "license": "CC BY 3.0",
+          "source": "http://game-icons.net/lorc/originals/crowned-heart.html",
+          "retrieved": "Wed Jul 27 2016 11:30:21 GMT-0600 (Mountain Daylight Time)"
+        },
+        {
+          "name": "Star swirl icon",
+          "original": "/src/images/svg/star-swirl.svg",
+          "files": [
+            "/src/images/magic.png",
+          ],
+          "changes": "recolor to #00f, remove background",
+          "license": "CC BY 3.0",
+          "source": "http://game-icons.net/lorc/originals/star-swirl.html",
+          "retrieved": "Wed Jul 27 2016 11:31:33 GMT-0600 (Mountain Daylight Time)"
+        },
+        {
+          "name": "Enlightenment icon",
+          "original": "/src/images/svg/enlightenment.svg",
+          "files": [
+            "/src/images/knowledge.png",
+          ],
+          "changes": "recolor to #090, remove background",
+          "license": "CC BY 3.0",
+          "source": "http://game-icons.net/lorc/originals/enlightenment.html",
+          "retrieved": "Wed Jul 27 2016 11:32:20 GMT-0600 (Mountain Daylight Time)"
+        },
+        {
+          "name": "Back and forth icon",
+          "original": "/src/images/svg/back-forth.svg",
+          "files": [
+            "/src/images/swap.png",
+          ],
+          "changes": "recolor to #a0c, remove background",
+          "license": "CC BY 3.0",
+          "source": "http://game-icons.net/lorc/originals/back-forth.html",
+          "retrieved": "Wed Jul 27 2016 12:51:07 GMT-0600 (Mountain Daylight Time)"
+        },
+        {
+          "name": "Shield bounces icon",
+          "original": "/src/images/svg/shield-bounces.svg",
+          "files": [
+            "/src/images/deflect.png",
+          ],
+          "changes": "recolor to #a0c, flip horizontal, remove background",
+          "license": "CC BY 3.0",
+          "source": "http://game-icons.net/lorc/originals/shield-bounces.html",
+          "retrieved": "Wed Jul 27 2016 12:55:18 GMT-0600 (Mountain Daylight Time)"
+        }
+      ]
+    }
+  ],
   "license": "ISC",
   "repository": {
     "type": "git",
