@@ -10,7 +10,7 @@ var CONTROL = {
   deck: [],
   discard: [],
   players: [],
-  cardStates: ['hidden', 'back', 'front'],
+  cardStates: ['Hidden', 'Back', 'Front'],
   activeCard: null,
   deselectActiveCard: function () {
     if (CONTROL.activeCard) {
@@ -39,12 +39,19 @@ Player.prototype.Discard = function (card) {
   deck.discard.push(self.cards.hand.splice(elementPos, 1));
 }
 
-function Card(id, cardState) {
+function Card(id, cardState, x, y) {
+  // The id determines what card is shown.
   this.id = id;
   this.power = (this.id % 13) + 1;
 
   // Card.state is index in CONTROL.cardStates.
   this.state = (cardState) ? cardState : 0;
+
+  if (this.state > 0) {
+    x = (x) ? x : 0;
+    y = (y) ? y : 0;
+    this['show' + CONTROL.cardStates[this.state]](x, y);
+  }
 }
 Card.prototype.getType = function () {
   if (this.id < 13) {
@@ -81,10 +88,16 @@ Card.prototype.getColor = function () {
 
   return '#000';
 }
+Card.prototype.showHidden = function (x, y) {
+  if (this.sprite) this.sprite.destroy();
+
+  this.sprite = null;
+}
 Card.prototype.showBack = function (x, y) {
   if (this.sprite) this.sprite.destroy();
 
   this.sprite = game.add.sprite(x, y, 'cardback');
+  this.sprite.anchor.set(0.5, 0.5);
   this.activateDrag();
 }
 Card.prototype.showFront = function (x, y) {
@@ -163,10 +176,9 @@ function preload() {
 function create() {
   createBackgroundImage();
 
-  var card = new Card(1, 2);
-  card.showFront(game.world.centerX, game.world.centerY);
-  var card = new Card(19, 2);
-  card.showFront(game.world.centerX + 100, game.world.centerY);
+  var card = new Card(1, 2, game.world.centerX - 100, game.world.centerY);
+  var card2 = new Card(40, 0, game.world.centerX, game.world.centerY);
+  var card3 = new Card(19, 1, game.world.centerX + 100, game.world.centerY);
 }
 
 function update() {

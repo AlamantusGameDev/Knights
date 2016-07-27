@@ -24,8 +24,8 @@
           "name": "Card draw icon",
           "original": "/src/images/svg/card-draw.svg",
           "files": [
-            "/src/images/draw.png"
-            "/src/images/draw-disabled.png",
+            "/src/images/draw.png",
+            "/src/images/draw-disabled.png"
           ],
           "changes": "recolor to #000 and #aaa, remove background",
           "license": "CC BY 3.0",
@@ -42,7 +42,7 @@
           "name": "Broadsword icon",
           "original": "/src/images/svg/broadsword.svg",
           "files": [
-            "/src/images/strength.png",
+            "/src/images/strength.png"
           ],
           "changes": "recolor to #db0, remove background",
           "license": "CC BY 3.0",
@@ -53,7 +53,7 @@
           "name": "Crowned heart icon",
           "original": "/src/images/svg/crowned-heart.svg",
           "files": [
-            "/src/images/belief.png",
+            "/src/images/belief.png"
           ],
           "changes": "recolor to #f00, remove background",
           "license": "CC BY 3.0",
@@ -64,7 +64,7 @@
           "name": "Star swirl icon",
           "original": "/src/images/svg/star-swirl.svg",
           "files": [
-            "/src/images/magic.png",
+            "/src/images/magic.png"
           ],
           "changes": "recolor to #00f, remove background",
           "license": "CC BY 3.0",
@@ -75,7 +75,7 @@
           "name": "Enlightenment icon",
           "original": "/src/images/svg/enlightenment.svg",
           "files": [
-            "/src/images/knowledge.png",
+            "/src/images/knowledge.png"
           ],
           "changes": "recolor to #090, remove background",
           "license": "CC BY 3.0",
@@ -86,7 +86,7 @@
           "name": "Back and forth icon",
           "original": "/src/images/svg/back-forth.svg",
           "files": [
-            "/src/images/swap.png",
+            "/src/images/swap.png"
           ],
           "changes": "recolor to #a0c, remove background",
           "license": "CC BY 3.0",
@@ -97,7 +97,7 @@
           "name": "Shield bounces icon",
           "original": "/src/images/svg/shield-bounces.svg",
           "files": [
-            "/src/images/deflect.png",
+            "/src/images/deflect.png"
           ],
           "changes": "recolor to #a0c, flip horizontal, remove background",
           "license": "CC BY 3.0",
