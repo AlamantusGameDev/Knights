@@ -31,12 +31,12 @@ function Player() {
   CONTROL.players.push(this);
 }
 Player.prototype.Draw = function () {
-  this.hand.push(deck.pile.shift());
+  this.hand.push(CONTROL.deck.shift());
 }
 Player.prototype.Discard = function (card) {
   var self = this;
   var elementPos = array.map(function (x) {return x.id; }).indexOf(card.id);
-  deck.discard.push(self.cards.hand.splice(elementPos, 1));
+  CONTROL.discard.push(self.cards.hand.splice(elementPos, 1));
 }
 
 function Card(id, cardState, x, y) {
@@ -47,11 +47,7 @@ function Card(id, cardState, x, y) {
   // Card.state is index in CONTROL.cardStates.
   this.state = (cardState) ? cardState : 0;
 
-  if (this.state > 0) {
-    x = (x) ? x : 0;
-    y = (y) ? y : 0;
-    this['show' + CONTROL.cardStates[this.state]](x, y);
-  }
+  this.displayByState(x, y);
 }
 Card.prototype.getType = function () {
   if (this.id < 13) {
@@ -88,6 +84,13 @@ Card.prototype.getColor = function () {
 
   return '#000';
 }
+Card.prototype.displayByState = function (x, y) {
+  if (this.state > 0) {
+    x = (x) ? x : 0;
+    y = (y) ? y : 0;
+    this['show' + CONTROL.cardStates[this.state]](x, y);
+  }
+}
 Card.prototype.showHidden = function (x, y) {
   if (this.sprite) this.sprite.destroy();
 
@@ -96,9 +99,9 @@ Card.prototype.showHidden = function (x, y) {
 Card.prototype.showBack = function (x, y) {
   if (this.sprite) this.sprite.destroy();
 
-  this.sprite = game.add.sprite(x, y, 'cardback');
+  this.sprite = game.add.sprite(x, y, 'card-back');
   this.sprite.anchor.set(0.5, 0.5);
-  this.activateDrag();
+  this.activateInteraction();
 }
 Card.prototype.showFront = function (x, y) {
   if (this.sprite) this.sprite.destroy();
@@ -118,18 +121,22 @@ Card.prototype.showFront = function (x, y) {
   this.sprite.addChild(cardImage);
   this.sprite.addChild(cardText);
 
-  this.activateDrag();
+  this.activateInteraction();
 }
-Card.prototype.activateDrag = function () {
+Card.prototype.activateInteraction = function () {
   //  Enable input and allow for dragging
   this.sprite.inputEnabled = true;
   this.sprite.input.enableDrag();
   this.sprite.events.onDragStart.add(this.onDragStart, this);
   // this.sprite.events.onDragStop.add(this.onDragStop, this);
 }
-Card.prototype.onDragStart = function () {
+Card.prototype.onDragStart = function (sprite, pointer) {
   if (CONTROL.activeCard) {
     CONTROL.activeCard.unglow();
+  }
+
+  if (game.input.keyboard.isDown(Phaser.Keyboard.SHIFT)) {
+    this.flip();
   }
 
   game.world.bringToTop(this.sprite);
@@ -137,18 +144,26 @@ Card.prototype.onDragStart = function () {
 
   CONTROL.activeCard = this;
 }
+Card.prototype.flip = function () {
+  if (this.state === 1) {
+    this.state = 2;
+  } else {
+    this.state = 1;
+  }
+  this.displayByState(this.sprite.x, this.sprite.y);
+}
 Card.prototype.glow = function () {
   // Add a glow sprite in the sprite's first children index
   if (this.sprite) {
-    var glow = game.add.sprite(0, 0, 'cardGlow');
+    var glow = game.add.sprite(0, 0, 'card-glow');
     glow.anchor.set(0.5, 0.5);
-    glow.scale.setTo(0.5, 0.5);
+    // glow.scale.setTo(0.5, 0.5);
     this.sprite.addChildAt(glow, 0);
   }
 }
 Card.prototype.unglow = function () {
   if (this.sprite) {
-    if (this.sprite.children[0].key === 'cardGlow') {
+    if (this.sprite.children[0].key === 'card-glow') {
       var glow = this.sprite.removeChildAt(0);
       glow.destroy();
     }
@@ -157,9 +172,9 @@ Card.prototype.unglow = function () {
 
 function preload() {
   // FIXME: add card front and back images
-  game.load.image('card', 'images/draw-disabled.png');
-  game.load.image('cardback', 'images/phaser.png');
-  game.load.image('cardGlow', 'images/phaser.png');
+  game.load.image('card', 'images/card.png');
+  game.load.image('card-back', 'images/card-back.png');
+  game.load.image('card-glow', 'images/card-glow.png');
 
   game.load.image('draw', 'images/draw.png');
   game.load.image('draw-disabled', 'images/draw-disabled.png');
@@ -174,6 +189,8 @@ function preload() {
 }
 
 function create() {
+  game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
+
   createBackgroundImage();
 
   var card = new Card(1, 2, game.world.centerX - 100, game.world.centerY);
