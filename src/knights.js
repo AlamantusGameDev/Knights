@@ -101,6 +101,13 @@ Card.prototype.showBack = function (x, y) {
 
   this.sprite = game.add.sprite(x, y, 'card-back');
   this.sprite.anchor.set(0.5, 0.5);
+
+  var cardImage = game.add.sprite(0, -8, 'logo');
+  cardImage.scale.setTo(0.17, 0.17);
+  cardImage.anchor.set(0.5, 0.5);
+
+  this.sprite.addChild(cardImage);
+
   this.activateInteraction();
 }
 Card.prototype.showFront = function (x, y) {
@@ -157,7 +164,6 @@ Card.prototype.glow = function () {
   if (this.sprite) {
     var glow = game.add.sprite(0, 0, 'card-glow');
     glow.anchor.set(0.5, 0.5);
-    // glow.scale.setTo(0.5, 0.5);
     this.sprite.addChildAt(glow, 0);
   }
 }
@@ -172,6 +178,8 @@ Card.prototype.unglow = function () {
 
 function preload() {
   // FIXME: add card front and back images
+  game.load.image('logo', 'images/logo.png');
+
   game.load.image('card', 'images/card.png');
   game.load.image('card-back', 'images/card-back.png');
   game.load.image('card-glow', 'images/card-glow.png');

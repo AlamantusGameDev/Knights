@@ -9,32 +9,18 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="148.16667mm"
-   height="207.12505mm"
-   viewBox="0 0 524.99999 733.90764"
+   width="117.9167mm"
+   height="176.87508mm"
+   viewBox="0 0 417.81506 626.72271"
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
    sodipodi:docname="card-glow.svg"
    inkscape:export-filename="C:\Users\rmantenesse\Documents\Git Repositories\Knights\src\images\card-glow.png"
-   inkscape:export-xdpi="22.5"
-   inkscape:export-ydpi="22.5">
+   inkscape:export-xdpi="21.540627"
+   inkscape:export-ydpi="21.540627">
   <defs
-     id="defs4">
-    <filter
-       inkscape:collect="always"
-       style="color-interpolation-filters:sRGB"
-       id="filter4294"
-       x="-0.15108974"
-       width="1.3021795"
-       y="-0.099521466"
-       height="1.1990429">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="27.336353"
-         id="feGaussianBlur4296" />
-    </filter>
-  </defs>
+     id="defs4" />
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -43,8 +29,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="260.01057"
-     inkscape:cy="352.77789"
+     inkscape:cx="206.41811"
+     inkscape:cy="299.1854"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -65,7 +51,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -73,9 +59,9 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-125.78573,-183.46498)">
+     transform="translate(-179.37819,-237.05741)">
     <rect
-       style="fill:none;fill-opacity:1;stroke:#ffff00;stroke-width:15.77296638;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter4294)"
+       style="fill:none;fill-opacity:1;stroke:#ff0000;stroke-width:15.77296638;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect4136"
        width="434.22702"
        height="659.22711"
