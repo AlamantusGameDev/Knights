@@ -3,6 +3,8 @@ window.PIXI = require('phaser/build/custom/pixi');
 window.p2 = require('phaser/build/custom/p2');
 window.Phaser = require('phaser/build/custom/phaser-split');
 
+var shuffle = require('knuth-shuffle').knuthShuffle;
+
 // Copied from the hellophaser example.
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '');
 
@@ -17,6 +19,21 @@ var CONTROL = {
       CONTROL.activeCard.unglow();
       CONTROL.activeCard = null;
     }
+  },
+  prepareDeck: function (clearAll) {
+    if (clearAll) {
+      CONTROL.deck = [];
+      CONTROL.discard = [];
+      CONTROL.players.forEach(function (player) {
+        player.cards.hand = [];
+        player.cards.knight = [];
+      });
+    }
+
+    for (var i = 0; i < 54; i++) {
+      CONTROL.deck.push(new Card(i));
+    }
+    shuffle(CONTROL.deck);
   }
 }
 

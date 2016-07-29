@@ -123,6 +123,7 @@
     "uglify-js": "^2.7.0"
   },
   "dependencies": {
+    "knuth-shuffle": "^1.0.1",
     "phaser": "^2.6.1"
   }
 }
