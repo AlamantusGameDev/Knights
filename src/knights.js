@@ -9,15 +9,61 @@ var shuffle = require('knuth-shuffle').knuthShuffle;
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '');
 
 var CONTROL = {
+  // An array of the cards in the deck.
   deck: [],
+
+  // The number of cards in the deck.
+  // If this changes, the way cards are id'd will need to change too.
+  DECKSIZE: 54,
+
+  deckX: 100,
+  deckY: 300,
+
+  // An array of the discarded cards.
   discard: [],
+
+  // An array of the current players (should only have 2).
   players: [],
+
+  // The index of the current player whose turn it is.
+  playerTurn: 0,
+
+  // Reference for card states.
   cardStates: ['Hidden', 'Back', 'Front'],
+
+  // The actively selected card. Null if no card selected.
   activeCard: null,
+
+  // Reference for game phases.
+  gamePhases: ['shuffle', 'build', 'play', 'end'],
+
+  // The index of the current game phase.
+  phase: 0,
+
+  cardAnimationQueue: [],
+
+  getCardSize: function () {
+    // Create a card offscreen to measure.
+    var card = new Card(0, null, 1, -100, -100);
+    var data = {
+      height: card.height,
+      width: card.width,
+      offsetX: card.offsetX,
+      offsetY: card.offsetY
+    };
+    card.sprite.destroy();
+    card = undefined;
+    return data;
+  },
+
   deselectActiveCard: function () {
     if (CONTROL.activeCard) {
       CONTROL.activeCard.unglow();
       CONTROL.activeCard = null;
+    }
+    if (CONTROL.cardAnimationQueue.length) {
+      var cardToAnimate = CONTROL.cardAnimationQueue.shift();
+      cardToAnimate.tween.start();
     }
   },
   prepareDeck: function (clearAll) {
@@ -30,38 +76,97 @@ var CONTROL = {
       });
     }
 
-    for (var i = 0; i < 54; i++) {
+    for (var i = 0; i < CONTROL.DECKSIZE; i++) {
       CONTROL.deck.push(new Card(i));
     }
     shuffle(CONTROL.deck);
+  },
+
+  // Hand out cards to the players and let them build.
+  startGame: function () {
+    if (CONTROL.players.length < 2) {
+      // Clear the players array and create 2 new ones.
+      CONTROL.players = [];
+      CONTROL.players.push(new Player());
+      CONTROL.players.push(new Player());
+      CONTROL.players[0].handX = 100;
+      CONTROL.players[0].handY = 450;
+      CONTROL.players[1].handX = 700;
+      CONTROL.players[1].handY = 150;
+      console.log(CONTROL.players);
+      // player1.knightX = game.world.centerX - (CONTROL.getCardSize().width * 2) - 10;
+      // player1.knightY = game.world.centerY + (CONTROL.getCardSize().width * 2) + 10;
+      // player2.knightX = game.world.centerX + (CONTROL.getCardSize().width * 2) + 10;
+      // player2.knightY = game.world.centerY - (CONTROL.getCardSize().width * 2) - 10;
+    }
+
+    for (var i = 0; i < 10; i++) {
+      CONTROL.players[0].draw(2);
+      CONTROL.players[1].draw(1);
+    }
+    console.log(CONTROL.cardAnimationQueue);
+
+    // Kick off the animation queue.
+    // CONTROL.cardAnimationQueue.shift().tween.start();
+
+    CONTROL.phase++;
   }
 }
 
 function Player() {
-  this.cards = {
-    hand: [],
-    knight: []
-  };
+  this.hand = [];
+  this.knight = [];
   this.hp = 0;
   this.maxHP = 0;
 
-  CONTROL.players.push(this);
+  this.handX = 0;
+  this.handY = 0;
+  this.knightX = 0;
+  this.knightY = 0;
+
+  // CONTROL.players.push(this);
 }
-Player.prototype.Draw = function () {
-  this.hand.push(CONTROL.deck.shift());
+Player.prototype.draw = function (state) {
+  var card = CONTROL.deck.shift();
+  card.owner = this;
+  card.state = (state) ? state : 0;
+  card.displayByState(CONTROL.deckX, CONTROL.deckY);
+
+  // Animate card to hand.
+  var handX = this.handX;
+  var handXOffset = (75 * this.hand.length);
+  if (this === CONTROL.players[1]) {
+    handX -= handXOffset;
+  } else {
+    handX += handXOffset;
+  }
+  var handY = this.handY;
+  card.queueMovementTo(handX, handY);
+
+  this.hand.push(card);
 }
-Player.prototype.Discard = function (card) {
-  var self = this;
-  var elementPos = array.map(function (x) {return x.id; }).indexOf(card.id);
-  CONTROL.discard.push(self.cards.hand.splice(elementPos, 1));
+Player.prototype.discard = function (card) {
+  var elementPos = this.hand.map(function (x) {return x.id; }).indexOf(card.id);
+  card = this.hand.splice(elementPos, 1);
+  card.owner = null;
+  CONTROL.discard.push(card);
+}
+Player.prototype.calculateHP = function () {
+  var result = 0;
+
+  this.knight.forEach(function (card) { result += card.power; });
+
+  return result;
 }
 
-function Card(id, cardState, x, y) {
+function Card(id, owner, cardState, x, y) {
   // The id determines what card is shown.
   this.id = id;
   this.power = (this.id % 13) + 1;
 
-  // Card.state is index in CONTROL.cardStates.
+  this.owner = (owner) ? owner : null;
+
+  // Card.state is index in CONTROL.cardStates[].
   this.state = (cardState) ? cardState : 0;
 
   this.displayByState(x, y);
@@ -176,6 +281,33 @@ Card.prototype.flip = function () {
   }
   this.displayByState(this.sprite.x, this.sprite.y);
 }
+Card.prototype.queueMovementTo = function (x, y) {
+  if (this.sprite) {
+    if (this.tween && this.tween.isRunning) this.tween.stop();
+    this.tween = game.add.tween(this.sprite).to({ x: x, y: y }, 500, Phaser.Easing.Linear.None, false);
+
+    this.tween.onComplete.add(function () {
+      console.log('completed moving');
+      console.log(CONTROL.cardAnimationQueue);
+      console.log(CONTROL.cardAnimationQueue.length);
+      if (CONTROL.cardAnimationQueue.length > 0) {
+        var nextCard = CONTROL.cardAnimationQueue.shift();
+        console.log(nextCard);
+        nextCard.tween.start();
+      }
+    });
+
+    CONTROL.cardAnimationQueue.push(this);
+  }
+}
+Card.prototype.moveTo = function (x, y) {
+  if (this.sprite) {
+    this.sprite.inputEnabled = false;
+
+    if (this.tween && this.tween.isRunning) this.tween.stop();
+    this.tween = game.add.tween(this.sprite).to({ x: x, y: y }, 300, Phaser.Easing.Linear.None, true);
+  }
+}
 Card.prototype.glow = function () {
   // Add a glow sprite in the sprite's first children index
   if (this.sprite) {
@@ -194,9 +326,45 @@ Card.prototype.unglow = function () {
 }
 
 // A game state.
-var testState = {};
+// var testState = {};
+//
+// testState.preload = function () {
+//   imagePreload();
+// }
+//
+// testState.create = function () {
+//   game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
+//
+//   createBackgroundImage();
+//
+//   var card = new Card(1, null, 2, game.world.centerX - 100, game.world.centerY);
+//   var card2 = new Card(40, null, 0, game.world.centerX, game.world.centerY);
+//   var card3 = new Card(19, null, 1, game.world.centerX + 100, game.world.centerY);
+// }
+//
+// testState.update = function () {
+//
+// }
 
-testState.preload = function () {
+var playState = {};
+
+playState.preload = function () {
+  imagePreload();
+}
+
+playState.create = function () {
+  game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
+ createBackgroundImage();
+
+  CONTROL.prepareDeck(true);
+  CONTROL.startGame();
+}
+
+playState.render = function () {
+  game.debug.text('Click to deal', game.world.centerX, game.world.centerY);
+}
+
+function imagePreload() {
   game.load.image('logo', 'images/logo.png');
 
   game.load.image('card', 'images/card.png');
@@ -213,20 +381,6 @@ testState.preload = function () {
 
   game.load.image('deflect', 'images/deflect.png');
   game.load.image('swap', 'images/swap.png');
-}
-
-testState.create = function () {
-  game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
-
-  createBackgroundImage();
-
-  var card = new Card(1, 2, game.world.centerX - 100, game.world.centerY);
-  var card2 = new Card(40, 0, game.world.centerX, game.world.centerY);
-  var card3 = new Card(19, 1, game.world.centerX + 100, game.world.centerY);
-}
-
-testState.update = function () {
-
 }
 
 function createBackgroundImage() {
@@ -248,5 +402,7 @@ function createBackgroundImage() {
 }
 
 // Add the testState state to the game and start it.
-game.state.add('test', testState);
+// game.state.add('test', testState);
+// game.state.start('test');
+game.state.add('test', playState);
 game.state.start('test');
