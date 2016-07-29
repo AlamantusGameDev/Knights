@@ -4,7 +4,7 @@ window.p2 = require('phaser/build/custom/p2');
 window.Phaser = require('phaser/build/custom/phaser-split');
 
 // Copied from the hellophaser example.
-var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(800, 600, Phaser.AUTO, '');
 
 var CONTROL = {
   deck: [],
@@ -176,8 +176,10 @@ Card.prototype.unglow = function () {
   }
 }
 
-function preload() {
-  // FIXME: add card front and back images
+// A game state.
+var testState = {};
+
+testState.preload = function () {
   game.load.image('logo', 'images/logo.png');
 
   game.load.image('card', 'images/card.png');
@@ -196,7 +198,7 @@ function preload() {
   game.load.image('swap', 'images/swap.png');
 }
 
-function create() {
+testState.create = function () {
   game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
 
   createBackgroundImage();
@@ -206,7 +208,7 @@ function create() {
   var card3 = new Card(19, 1, game.world.centerX + 100, game.world.centerY);
 }
 
-function update() {
+testState.update = function () {
 
 }
 
@@ -227,3 +229,7 @@ function createBackgroundImage() {
   background.inputEnabled = true;
   background.events.onInputDown.add(CONTROL.deselectActiveCard, this);
 }
+
+// Add the testState state to the game and start it.
+game.state.add('test', testState);
+game.state.start('test');
